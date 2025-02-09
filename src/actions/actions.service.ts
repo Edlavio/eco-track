@@ -25,9 +25,12 @@ export class ActionsService {
     });
     await action.save();
 
-    await this.userModel.findByIdAndUpdate(action.userId, {
-      $inc: { points: points },
-    });
+    await this.userModel.findOneAndUpdate(
+      { userId: action.userId },
+      {
+        $inc: { points: points },
+      },
+    );
 
     const { actionId, _id, ...actionData } = action.toObject();
 
@@ -72,9 +75,12 @@ export class ActionsService {
     }
     const points = CategoryPoints[action.category];
 
-    await this.userModel.findByIdAndUpdate(action.userId, {
-      $inc: { points: -points },
-    });
+    await this.userModel.findOneAndUpdate(
+      { userId: action.userId },
+      {
+        $inc: { points: -points },
+      },
+    );
 
     await action.deleteOne();
 
